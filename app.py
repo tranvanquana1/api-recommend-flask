@@ -4,6 +4,15 @@ from flask_restful import Api
 from resources.Routes import initialize_routes
 
 app = Flask(__name__)
+
+
+@app.route('/')
+def index():
+    return {
+        "message": 'server is running'
+    }
+
+
 api = Api(app)
 
 
