@@ -20,12 +20,9 @@ category = np.array(['unknown ', 'Action ', 'Adventure ',
 # lấy thể loại phim
 
 
-def get_category(array):
-    arr_category = []
-    for id in array:
-        category_item = category.dot(X_train_counts[id]).strip()
-        arr_category.append(category_item)
-    return np.array(arr_category)
+def get_category(id):
+    category_item = category.dot(X_train_counts[id]).strip()
+    return category_item
 
 
 # tfidf
@@ -122,4 +119,5 @@ def evaluate(Yhat, rates, W, b):
 
 if __name__ == '__main__':
     print('predict---------------------------')
-    print(precision(10))
+    # print(precision(10))
+    print(get_category(10))

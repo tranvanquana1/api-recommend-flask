@@ -31,3 +31,7 @@ class Users(db.Document):
     movies = db.ListField(db.DictField())
     created_at = db.DateTimeField(default=datetime.datetime.utcnow)
     update_at = db.DateTimeField(default=datetime.datetime.utcnow)
+
+
+class Ratings(db.Document):
+    all_rating = db.StringField(required="ERROR_NAME_MISSING")

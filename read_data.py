@@ -12,6 +12,7 @@ users = pd.read_csv('ml-100k/u.user', sep='|',
 r_cols = ['user_id', 'movie_id', 'rating', 'unix_timestamp']
 ratings = pd.read_csv('ml-100k/u.data', sep='\t',
                       names=r_cols, encoding='latin-1')
+rate_data = ratings.values
 
 # Dữ liệu train
 ratings_train = pd.read_csv(
