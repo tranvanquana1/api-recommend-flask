@@ -38,25 +38,29 @@ n_items = items.shape[0]
 # Hiện thị nội dung các tập dữ liệu
 
 
+def get_cate():
+    categories = []
+
+
 def main():
 
-    # User data
-    print("\nUser Data :")
-    print("shape : ", users.shape)
-    print(users.head())
-    print("number users: ", n_users)
+    # # User data
+    # print("\nUser Data :")
+    # print("shape : ", users.shape)
+    # print(users.head())
+    # print("number users: ", n_users)
 
-    # Rating data
-    print("\nRating Data :")
-    print("shape : ", ratings.shape)
-    print(ratings.head())
+    # # Rating data
+    # print("\nRating Data :")
+    # print("shape : ", ratings.shape)
+    # print(ratings.head())
 
     # Items data
     print("\nItem Data :")
-    print("shape : ", items.shape)
-    print(items.head())
-    print("number Items: ", n_items)
-    print(items[:, 0])
+    print("shape : ", items.values[266])
+    # print(items.head())
+    # print("number Items: ", n_items)
+    # print(items[:, 0])
 
 
 if __name__ == "__main__":

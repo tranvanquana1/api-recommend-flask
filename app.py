@@ -2,13 +2,20 @@ from flask import Flask
 from database.db import initialize_db
 from flask_restful import Api
 from resources.Routes import initialize_routes
-from database.models import Movies
 
 app = Flask(__name__)
 
 
 @app.route('/')
 def index():
+    # for user in rd.users.values:
+
+    #     u = models.Users(user_id=user[0], username=str(user[0]), password=str(user[0]),
+    #                      age=user[1], sex=user[2], occupation=user[3], zip_code=user[4])
+    #     u.save()
+    # print(u.user_id, u.username,
+    #       u.password, u.age, u.sex, u.occupation, u.zip_code)
+
     return {
         "message": 'server is running'
     }
@@ -19,6 +26,8 @@ api = Api(app)
 
 app.config['MONGODB_SETTINGS'] = {
     'host': 'mongodb+srv://admin:admin@cluster0.igcnz.mongodb.net/recommendDB?retryWrites=true&w=majority'
+
+
 }
 
 initialize_db(app)
@@ -27,6 +36,3 @@ initialize_routes(api)
 
 if __name__ == "__main__":
     app.run()
-    movie = Movies(title='hello', IMDb_URL=['hello'], release_date=[
-        'hello'], video_release_date='hello', category=['hello'], status=1)
-    movie.save()

@@ -156,10 +156,6 @@ class CF(object):
         items_rated_by_u = self.Y_data[ids, 1].tolist()
         recommended_items = []
         recommended_items_rating = []
-        recommended_items_title = []
-        recommended_items_release_date = []
-        recommended_items_IMDb_URL = []
-        recommended_items_category_list = []
 
         for i in range(self.n_items):
             if i not in items_rated_by_u:
@@ -167,26 +163,17 @@ class CF(object):
                 if rating > 0:
                     recommended_items.append(i)
                     recommended_items_rating.append(rating)
-                    recommended_items_title.append(rd.items.values[i, 1])
-                    recommended_items_release_date.append(
-                        rd.items.values[i, 2])
-                    recommended_items_IMDb_URL.append(rd.items.values[i, 4])
-                    recommended_items_category_list.append(
-                        self.get_category(i))
 
         recommended_items_rating = recommended_items_rating + self.mu[u]
 
         table_user_item = pd.DataFrame(
-            {'movie_id': recommended_items, "movie_title": recommended_items_title, "release_date": recommended_items_release_date, "IMDb_URL": recommended_items_IMDb_URL, "categogies": recommended_items_category_list,  'predict_rating': recommended_items_rating})
+            {'movie_id': recommended_items,  'predict_rating': recommended_items_rating})
 
         # Sort theo predict rating
         table_sorted = table_user_item.head(10).sort_values(
             by='predict_rating', ascending=False)
 
-        result = table_sorted.to_json(orient='records')
-        parsed = json.loads(result)
-
-        return json.dumps(parsed, indent=2)
+        return table_sorted.values
 
     def print_recommendation(self):
         """

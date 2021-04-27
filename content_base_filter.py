@@ -21,7 +21,32 @@ category = np.array(['unknown ', 'Action ', 'Adventure ',
 
 
 def get_category(id):
-    category_item = category.dot(X_train_counts[id]).strip()
+    category_item = []
+    switcher = {
+        0: "608651be44f3f49f3baae6aa",
+        1: "60865ca43e301f1ec22a6ed2",
+        2: "60865ca53e301f1ec22a6ed3",
+        3: "60865ca53e301f1ec22a6ed4",
+        4: "60865ca63e301f1ec22a6ed5",
+        5: "60865ca73e301f1ec22a6ed6",
+        6: "60865ca83e301f1ec22a6ed7",
+        7: "60865ca83e301f1ec22a6ed8",
+        8: "60865ca93e301f1ec22a6ed9",
+        9: "60865caa3e301f1ec22a6eda",
+        10: "60865cab3e301f1ec22a6edb",
+        11: "60865cab3e301f1ec22a6edc",
+        12: "60865cac3e301f1ec22a6edd",
+        13: "60865cad3e301f1ec22a6ede",
+        14: "60865cae3e301f1ec22a6edf",
+        15: "60865cae3e301f1ec22a6ee0",
+        16: "60865caf3e301f1ec22a6ee1",
+        17: "60865cb03e301f1ec22a6ee2",
+        18: "60865cb13e301f1ec22a6ee3",
+    }
+    for index in range(len(X_train_counts[id])):
+        if(X_train_counts[id][index] == 1):
+            category_item.append(switcher.get(index))
+    # category_item = category.dot(X_train_counts[id]).strip()
     return category_item
 
 
