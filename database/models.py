@@ -17,6 +17,7 @@ class Movies(db.Document):
     video_release_date = db.StringField(default=None)
     IMDb_URL = db.StringField(required=True)
     category = db.ListField(db.ReferenceField(Categories))
+    category_code = db.ListField(db.IntField())
     status = db.IntField(default=0)
     created_at = db.DateTimeField(default=datetime.datetime.utcnow)
     update_at = db.DateTimeField(default=datetime.datetime.utcnow)

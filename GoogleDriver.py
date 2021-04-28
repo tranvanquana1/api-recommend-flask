@@ -22,7 +22,7 @@ class GoogleDriver(object):
 
         # Initialize GoogleDriveFile instance with file id.
 
-        self.file_id = '14uQ-7OrU5vMEVP0aoSJe5SJjzDfLTxqK'
+        self.file_id = '16-lUKwQhryajob_EkYOEgsmVYvb9dnwC'
 
         self.downloaded = drive.CreateFile({'id': self.file_id})
         self.csv_raw = io.StringIO(self.downloaded.GetContentString())
@@ -41,18 +41,20 @@ class GoogleDriver(object):
         # current date and time
         now = datetime.now()
         timestamp = int(datetime.timestamp(now))
+        refresh = self.downloaded.GetContentString()
+        old_data = self.rate_train
 
-        data = self.downloaded.GetContentString()
+        new_data = refresh + "\n" + str(user_id) + "," + str(movie_id) + "," + \
+            str(rating) + "," + str(timestamp)
 
-        new_data = np.concatenate(
-            (self.rate_train, np.matrix([[user_id, movie_id, rating, timestamp]])), axis=0)
-
-        table_data = pd.DataFrame(
-            new_data, columns=self.r_cols)
-
-        data = str(table_data.to_csv(index=False))
-
-        self.downloaded.SetContentString(data)
+        self.downloaded.SetContentString(new_data)
         self.downloaded.Upload()
+
+        self.csv_raw = io.StringIO(self.downloaded.GetContentString())
+
+        self.ratings_base = pd.read_csv(
+            self.csv_raw, sep=',', names=self.r_cols, encoding='latin-1', skiprows=[0], header=None)
+
+        self.rate_train = self.ratings_base.values
 
         print('update complete')

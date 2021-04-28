@@ -23,8 +23,8 @@ class CF(object):
         self.dist_func = dist_func
         self.Ybar_data = None
         # number of users and items. Remember to add 1 since id starts from 0
-        self.n_users = int(np.max(self.Y_data[:, 0])) + 1
-        self.n_items = int(np.max(self.Y_data[:, 1])) + 1
+        self.n_users = int(np.max(self.Y_data[:, 1])) + 1
+        self.n_items = int(np.max(self.Y_data[:, 0])) + 1
 
     def get_category(self, id):
         category_item = category.dot(X_train_counts[id]).strip()
@@ -48,15 +48,15 @@ class CF(object):
                              header=False, sep='\t', )
 
     def normalize_Y(self):
-        users = self.Y_data[:, 0]  # all users - first col of the Y_data
+        items = self.Y_data[:, 0]  # all items - first col of the Y_data
         self.Ybar_data = self.Y_data.copy()
-        self.mu = np.zeros((self.n_users,))
-        for n in range(self.n_users):
-            # row indices of rating done by user n
+        self.mu = np.zeros((self.n_items,))
+        for n in range(self.n_items):
+            # row indices of rating for item n
             # since indices need to be integers, we need to convert
-            ids = np.where(users == n)[0].astype(np.int32)
-            # indices of all ratings associated with user n
-            item_ids = self.Y_data[ids, 1]
+            ids = np.where(items == n)[0].astype(np.int32)
+            # indices of all ratings for item n
+            users_ids = self.Y_data[ids, 1]
             # and the corresponding ratings
             ratings = self.Y_data[ids, 2]
             # take mean
@@ -70,11 +70,11 @@ class CF(object):
         ################################################
         # form the rating matrix as a sparse matrix. Sparsity is important
         # for both memory and computing efficiency. For example, if #user = 1M,
-        # #item = 100k, then shape of the rating matrix would be (100k, 1M),
+        # #item = 100k, then shape of the rating matrix would be (1M, 100k),
         # you may not have enough memory to store this. Then, instead, we store
         # nonzeros only, and, of course, their locations.
         self.Ybar = sparse.coo_matrix((self.Ybar_data[:, 2],
-                                       (self.Ybar_data[:, 1], self.Ybar_data[:, 0])), (self.n_items, self.n_users))
+                                       (self.Ybar_data[:, 1], self.Ybar_data[:, 0])), (self.n_users, self.n_items))
         self.Ybar = self.Ybar.tocsr()
 
     def similarity(self):
@@ -143,37 +143,43 @@ class CF(object):
 
         return recommended_items
 
-    def recommend2(self, u):
+    def recommend2(self, u, l):
         """
         Determine all items should be recommended for user u.
         The decision is made based on all i such that:
         self.pred(u, i) > 0. Suppose we are considering items which
         have not been rated by u yet.
         """
-        ids = np.where(self.Y_data[:, 0] == u)[0]
+        print('total_user', u, l)
 
-        # item indices rated by user_id
-        items_rated_by_u = self.Y_data[ids, 1].tolist()
-        recommended_items = []
-        recommended_items_rating = []
+        if u < self.n_users:
 
-        for i in range(self.n_items):
-            if i not in items_rated_by_u:
-                rating = self.__pred(u, i)
-                if rating > 0:
-                    recommended_items.append(i)
-                    recommended_items_rating.append(rating)
+            ids = np.where(self.Y_data[:, 1] == u)[0]
 
-        recommended_items_rating = recommended_items_rating + self.mu[u]
+            # item indices rated by user_id
+            items_rated_by_u = self.Y_data[ids, 1].tolist()
+            recommended_items = []
+            recommended_items_rating = []
 
-        table_user_item = pd.DataFrame(
-            {'movie_id': recommended_items,  'predict_rating': recommended_items_rating})
+            for i in range(self.n_items):
+                if i not in items_rated_by_u:
+                    rating = self.pred(u, i)
+                    if rating > 0:
+                        recommended_items.append(i)
+                        recommended_items_rating.append(rating)
 
-        # Sort theo predict rating
-        table_sorted = table_user_item.head(10).sort_values(
-            by='predict_rating', ascending=False)
+            recommended_items_rating = recommended_items_rating + self.mu[u]
 
-        return table_sorted.values
+            table_user_item = pd.DataFrame(
+                {'movie_id': recommended_items,  'predict_rating': recommended_items_rating})
+
+            # Sort theo predict rating
+            table_sorted = table_user_item.head(l).sort_values(
+                by='predict_rating', ascending=False)
+
+            return table_sorted.values
+        else:
+            return []
 
     def print_recommendation(self):
         """
