@@ -5,6 +5,8 @@ from resources.Routes import initialize_routes
 
 app = Flask(__name__)
 
+CORS(app)
+
 
 @app.route('/')
 def index():

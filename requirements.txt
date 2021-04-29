@@ -20,6 +20,7 @@ email-validator==1.1.2
 filelock==3.0.12
 flash==1.0.3
 Flask==1.1.2
+Flask-Cors==3.0.10
 flask-marshmallow==0.14.0
 Flask-Migrate==2.6.0
 flask-mongoengine==1.0.0
