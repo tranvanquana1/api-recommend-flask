@@ -6,11 +6,7 @@ from database.models import Movies, Users
 
 
 #
-gd = GoogleDriver()
-rate_train = gd.rate_train
-rate_train[:, :2] -= 1
 
-rs = CF(rate_train, k=30, uuCF=0)
 
 #
 parser = reqparse.RequestParser()
@@ -21,6 +17,11 @@ parser.add_argument('page_size', type=int,
 
 class PredictResource(Resource):
     def get(self):
+        gd = GoogleDriver()
+        rate_train = gd.rate_train
+        rate_train[:, :2] -= 1
+
+        rs = CF(rate_train, k=30, uuCF=0)
         rs.fit()
         total_user = Users.objects().count()
         args = parser.parse_args()
