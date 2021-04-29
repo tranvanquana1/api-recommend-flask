@@ -2,6 +2,7 @@ from flask import Flask
 from database.db import initialize_db
 from flask_restful import Api
 from resources.Routes import initialize_routes
+from flask_cors import CORS
 
 app = Flask(__name__)
 
