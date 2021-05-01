@@ -9,6 +9,8 @@ parser.add_argument('page_index', type=int,
                     help='TYPE MUST INTEGER', default=1)
 parser.add_argument('page_size', type=int,
                     help='TYPE MUST INTEGER', default=10)
+parser.add_argument('keyword', type=str,
+                    help='TYPE MUST STRING', default=None)
 
 
 class MoviesResource(Resource):
@@ -16,8 +18,10 @@ class MoviesResource(Resource):
         args = parser.parse_args()
         page_index = args['page_index']
         page_size = args['page_size']
+        keyword = args['keyword']
 
-        movies = Movies.objects().paginate(page=page_index, per_page=page_size)
+        movies = Movies.objects(title__contains=keyword).paginate(
+            page=page_index, per_page=page_size)
 
         return jsonify({
             "message": "Danh sach phim",
